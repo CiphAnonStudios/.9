@@ -71,10 +71,7 @@
             width: 100%;
             height: 100%;
             border: none; 
-            /* Ensure iframes allow fullscreen functionality for embedded content like videos */
             allow: "fullscreen";
-            /* Replace 'https://example.com' with your target URL */
-            src: "https://study-math.nevuer.com/"; 
         }
     </style>
 </head>
@@ -87,7 +84,8 @@
 
     <!-- The container covers the full screen when active -->
     <div id="iframe-container">
-        <iframe id="content-frame" title="External Content Frame"></iframe>
+        <!-- The URL is set here as requested -->
+        <iframe id="content-frame" src="https://flamepass.com" title="External Content Frame"></iframe>
     </div>
 
     <script>
