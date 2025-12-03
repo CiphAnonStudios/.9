@@ -102,45 +102,39 @@
             font-size: 12px;
         }
 
-          .move-container {
-        position: relative; 
+            .move-container {
+        position: relative;
         cursor: pointer;
-        display: flex; /* Use flexbox to center the text label */
+        display: inline-flex; /* Keeps image and text side-by-side */
         align-items: center;
-        justify-content: center; /* Center the text horizontally */
-        padding: 0; /* Remove padding to allow image to cover edges */
-        /* background-color: #f0f0f0;  <-- Remove this */
+        padding: 10px;
+        background-color: #f0f0f0;
         border: 1px solid #ccc;
-        transition: left 0.5s ease; 
-        left: 0; 
-        width: 200px; 
-        /* height: 100px; <-- Added via inline style in HTML for quick fix */
+        transition: left 0.5s ease;
+        left: 0;
+        width: 200px;
         text-align: center;
-
-        /* Add the background image properties */
-        background-image: url('./asset/blooketcheats1.png');
-        background-size: cover; /* This makes the image fill the entire div */
-        background-position: center;
-        background-repeat: no-repeat;
+        /* Add some margin so it doesn't overlap the main button in the corner */
+        margin-top: 50px;
+        margin-left: 20px;
     }
 
-.move-image {
-        /* Hide the <img> tag now that the background is handling the visual */
-        display: none; 
+    .move-image {
+        /* FIX: Uncomment the width and height properties to define the image size */
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        object-fit: cover; /* Ensures the image looks good within its 50x50 box */
     }
 
-  .move-text {
+    .move-text {
         font-size: 16px;
-        /* Make the text readable over any image */
-        color: white; 
-        background-color: rgba(0, 0, 0, 0.6);
-        padding: 5px 10px;
-        border-radius: 4px;
+        color: #333;
     }
 
-/* Class to be added/removed by JavaScript */
-   .move-right {
-        left: 100px;
+    /* Class to be added/removed by JavaScript */
+    .move-right {
+        left: 100px; /* Moves the element 100px to the right when this class is active */
     }
 
     </style>
@@ -218,11 +212,23 @@
             }
         });
 
-        function toggleMovement() {
-    var element = document.querySelector('.move-container');
-    element.classList.toggle('move-right');
-}
+       // Make sure the toggleMovement function is defined like this:
+    function toggleMovement() {
+        var element = document.querySelector('.move-container');
+        element.classList.toggle('move-right');
+    }
 
+    // Keep the existing mousemove listener (which was cut off in your prompt)
+    const parallaxStrength = 60; 
+    document.addEventListener('mousemove', (e) => {
+        if (iframeContainerEl.classList.contains('is-visible') && !document.fullscreenElement) {
+                decorImages.forEach(image => {
+                const offsetX = (e.clientX / window.innerWidth - 0.5) * parallaxStrength;
+                const offsetY = (e.clientY / window.innerHeight - 0.5) * parallaxStrength;
+                image.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+        }
+    });
     </script>
 </body>
 </html>
