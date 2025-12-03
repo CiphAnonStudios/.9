@@ -9,126 +9,59 @@
         html, body {
             height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; 
             background-color: #333;
-            background-image: url('./asset/background1.png'); 
+            background-image: url('./asset/background.png'); 
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
             position: relative; 
         }
 
-        /* --- Global Button Styling Improvements --- */
-        .action-button, .iframe-control-btn {
-            /* Smooth transitions for hover/active states */
-            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+        /* --- Sliding Image Block Styles --- */
+        #sliding-block {
+            position: fixed;
+            top: 50%;
+            /* Starts hidden off-screen to the right by its full width (100%) */
+            right: 0; 
+            transform: translateY(-50%) translateX(100%); 
+            width: 200px; /* Width of the image container */
             cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        /* Hover effect: Subtle lift and shadow increase */
-        .action-button:hover, .iframe-control-btn:hover {
-            background-color: #555;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transform: translateY(-1px);
-        }
-
-        /* Active effect: Simulates a button press */
-        .action-button:active, .iframe-control-btn:active {
-            transform: translateY(1px); /* Pushes button down 1px */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            background-color: #222;
+            z-index: 100; /* Ensure it's visible */
+            transition: transform 0.5s ease-out; /* Smooth sliding animation */
+            border-radius: 5px 0 0 5px; /* Rounded corners only on the left side */
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
         
-        .action-button:focus-visible, .iframe-control-btn:focus-visible {
-            outline: 2px solid dodgerblue; 
-            outline-offset: 2px;
+        /* Class added by JS to slide it in */
+        #sliding-block.is-active {
+            /* Slides left to be flush with the right edge of the screen */
+            transform: translateY(-50%) translateX(0); 
+        }
+
+        #sliding-block img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
 
-        /* --- Main Toggle Button Styles (Fixed to the bottom right) --- */
-        #toggle-button {
-            position: fixed; 
-            bottom: 20px; left: 20px; padding: 10px 20px;
-            background-color: #333; color: white;
-            z-index: 40; 
-        }
-
-        /* --- Iframe Container (Modal Window) Styles --- */
-        #iframe-container {
-            position: fixed; top: 50%; left: 50%; overflow: visible; 
-            transform: translate(-50%, -50%) scale(0.5) rotateX(45deg); 
-            width: 800px; height: 500px; max-width: 90vw; max-height: 90vh;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border-radius: 8px;
-            opacity: 0; pointer-events: none; 
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out, width 0s, height 0s, top 0s, left 0s;
-            z-index: 20; 
-        }
-        #iframe-container.is-visible {
-            transform: translate(-50%, -50%) scale(1) rotateX(0deg); 
-            opacity: 1; pointer-events: auto; 
-        }
-        
-        /* Styles applied when in native browser fullscreen mode */
+        /* --- Other existing styles remain the same for brevity --- */
+        .action-button, .iframe-control-btn { transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; }
+        .action-button:hover, .iframe-control-btn:hover { background-color: #555; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); transform: translateY(-1px); }
+        .action-button:active, .iframe-control-btn:active { transform: translateY(1px); background-color: #222; }
+        .action-button:focus-visible, .iframe-control-btn:focus-visible { outline: 2px solid dodgerblue; outline-offset: 2px; }
+        #toggle-button { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; background-color: #333; color: white; z-index: 40; }
+        #iframe-container { position: fixed; top: 50%; left: 50%; overflow: visible; transform: translate(-50%, -50%) scale(0.5) rotateX(45deg); width: 800px; height: 500px; max-width: 90vw; max-height: 90vh; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border-radius: 8px; opacity: 0; pointer-events: none; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out, width 0s, height 0s, top 0s, left 0s; z-index: 20; }
+        #iframe-container.is-visible { transform: translate(-50%, -50%) scale(1) rotateX(0deg); opacity: 1; pointer-events: auto; }
         #iframe-container:-webkit-full-screen { width: 100% !important; height: 100% !important; top: 0 !important; left: 0 !important; transform: none !important; box-shadow: none !important; border-radius: 0 !important; }
         #iframe-container:full-screen { width: 100% !important; height: 100% !important; top: 0 !important; left: 0 !important; transform: none !important; box-shadow: none !important; border-radius: 0 !important; }
-
-        /* --- Decorative Images Styles --- */
-        .decor-image { position: absolute; transition: transform 0.1s linear; pointer-events: none; z-index: 5; }
-        #decor-image-1 { width: 100vh; top: -145px; left: -190px; }
-        #decor-image-2 { width: 80vh; bottom: -130px; right: -170px; }
-
-        /* --- Backdrop Overlay --- */
-        #backdrop-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7); opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease; z-index: 15;
-        }
-
-        /* --- Iframe Element Styles --- */
-        #content-frame {
-            width: 100%; height: 100%; border: none; allow: "fullscreen";
-            background-color: white; position: relative; z-index: 10; 
-            border-radius: 8px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        /* --- OVERLAID BUTTONS CONTAINER & STYLES --- */
-        #iframe-controls {
-            position: absolute; top: 10px; right: 10px; display: flex; gap: 5px;
-            z-index: 15;
-        }
-        .iframe-control-btn {
-            padding: 5px 10px; background-color: rgba(0, 0, 0, 0.6); color: white;
-            font-size: 12px;
-        }
-
-        /* --- Sliding Image Block Styles --- */
-#sliding-block {
-    position: fixed;
-    top: 50%;
-    /* Starts hidden off-screen to the right by its full width (100%) */
-    right: 0; 
-    transform: translateY(-50%) translateX(100%); 
-    width: 200px; /* Width of the image container */
-    cursor: pointer;
-    z-index: 100; /* Ensure it's visible */
-    transition: transform 0.5s ease-out; /* Smooth sliding animation */
-    border-radius: 5px 0 0 5px; /* Rounded corners only on the left side */
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-}
-
-/* Class added by JS to slide it in */
-#sliding-block.is-active {
-    /* Slides left to be flush with the right edge of the screen */
-    transform: translateY(-50%) translateX(0); 
-}
-
-#sliding-block img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
+        .decor-image { position: absolute; transition: transform 0.1s linear; pointer-events: none; z-index: 5; border-radius: 50%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); }
+       #decor-image-1 { width: 100vh; top: -145px; left: -190px; }
+       #decor-image-2 { width: 80vh; bottom: -130px; right: -170px; }
+        #backdrop-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 15; }
+        #content-frame { width: 100%; height: 100%; border: none; allow: "fullscreen"; background-color: white; position: relative; z-index: 10; border-radius: 8px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); }
+        #iframe-controls { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 15; }
+        .iframe-control-btn { padding: 5px 10px; background-color: rgba(0, 0, 0, 0.6); color: white; font-size: 12px; }
 
     </style>
 </head>
@@ -136,31 +69,30 @@
 
     <div id="backdrop-overlay"></div>
 
+    <!-- The original toggle button remains visible in the corner of the main window -->
     <button id="toggle-button" class="action-button" onclick="toggleIframe()" aria-expanded="false" aria-controls="iframe-container">
         Show Iframe Modal
     </button>
 
+    <!-- --- New Sliding Block HTML --- -->
+    <div id="sliding-block" onclick="toggleSlidingBlock()">
+        <!-- Link wraps the image -->
+        <a href="https://example.com" target="_blank" onclick="event.stopPropagation()">
+            <!-- Replace 'path/to/your/sliding_image.jpg' with your image path -->
+            <img src="./asset/your_sliding_image.jpg" alt="Clickable content link">
+        </a>
+    </div>
+
     <div id="iframe-container">
-        
         <div id="iframe-controls">
             <button class="iframe-control-btn" onclick="reloadIframe()">Reload</button>
             <button class="iframe-control-btn" onclick="toggleFullscreen()">Fullscreen</button>
         </div>
         
-        <iframe id="content-frame" src="https://flamepass.com" title="External Content Frame"></iframe>
+        <iframe id="content-frame" src="YOUR_URL_HERE" title="External Content Frame"></iframe>
         
         <img src="./asset/iframeimage1.png" alt="Floating decor 1" class="decor-image" id="decor-image-1">
         <img src="./asset/iframeimage2.png" alt="Floating decor 2" class="decor-image" id="decor-image-2">
-
-        <!-- --- New Sliding Block HTML --- -->
-<div id="sliding-block" onclick="toggleSlidingBlock()">
-    <!-- Link wraps the image -->
-    <a href="https://example.com" target="_blank" onclick="event.stopPropagation()">
-        <!-- Replace 'path/to/your/sliding_image.jpg' with your image path -->
-        <img src="./asset/your_sliding_image.jpg" alt="Clickable content link">
-    </a>
-</div>
-
     </div>
 
     <script>
@@ -169,7 +101,17 @@
         const toggleButtonEl = document.getElementById('toggle-button');
         const backdropEl = document.getElementById('backdrop-overlay');
         const decorImages = document.querySelectorAll('.decor-image');
+        const slidingBlockEl = document.getElementById('sliding-block');
 
+
+        // --- Sliding Block Function ---
+        function toggleSlidingBlock() {
+            // This function is attached to the parent div
+            slidingBlockEl.classList.toggle('is-active');
+        }
+
+
+        // --- Other Action Functions ---
         function toggleIframe() {
             iframeContainerEl.classList.toggle('is-visible');
             backdropEl.classList.toggle('is-visible');
@@ -178,26 +120,19 @@
             toggleButtonEl.setAttribute('aria-expanded', isVisible);
         }
 
-        function reloadIframe() {
-            iframeEl.src = iframeEl.src; 
-        }
+        function reloadIframe() { iframeEl.src = iframeEl.src; }
 
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
-                if (iframeContainerEl.requestFullscreen) {
-                    iframeContainerEl.requestFullscreen();
-                } else if (iframeContainerEl.webkitRequestFullscreen) {
-                    iframeContainerEl.webkitRequestFullscreen();
-                }
+                if (iframeContainerEl.requestFullscreen) { iframeContainerEl.requestFullscreen(); } 
+                else if (iframeContainerEl.webkitRequestFullscreen) { iframeContainerEl.webkitRequestFullscreen(); }
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
+                if (document.exitFullscreen) { document.exitFullscreen(); } 
+                else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
             }
         }
 
+        // --- Parallax Effect Script for Decor Images ---
         const parallaxStrength = 60; 
         document.addEventListener('mousemove', (e) => {
             if (iframeContainerEl.classList.contains('is-visible') && !document.fullscreenElement) {
@@ -208,17 +143,6 @@
                 });
             }
         });
-
-        // Add this line with your other element selectors (at the top of the <script> block)
-const slidingBlockEl = document.getElementById('sliding-block');
-
-// --- Sliding Block Function ---
-function toggleSlidingBlock() {
-    // Toggles the 'is-active' class on click
-    slidingBlockEl.classList.toggle('is-active');
-}
-
     </script>
 </body>
 </html>
-
