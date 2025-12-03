@@ -24,7 +24,7 @@
             position: relative; 
         }
         
-        /* --- Button Styles --- */
+        /* --- Main Toggle Button Styles (Fixed to the bottom right) --- */
         #toggle-button {
             position: fixed; 
             bottom: 20px;    
@@ -35,7 +35,7 @@
             color: white;
             border: none;
             border-radius: 5px;
-            z-index: 30; 
+            z-index: 40; /* Placed above everything */
         }
 
         /* --- Iframe Container (Modal Window) Styles --- */
@@ -60,6 +60,10 @@
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out;
 
             z-index: 20; 
+
+            /* Added transition for native fullscreen API */
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out, width 0s, height 0s, top 0s, left 0s;
+
         }
 
         #iframe-container.is-visible {
@@ -68,6 +72,11 @@
             pointer-events: auto; 
         }
         
+        /* Styles applied when in native browser fullscreen mode */
+        #iframe-container:-webkit-full-screen { width: 100% !important; height: 100% !important; top: 0 !important; left: 0 !important; transform: none !important; box-shadow: none !important; border-radius: 0 !important; }
+        #iframe-container:full-screen { width: 100% !important; height: 100% !important; top: 0 !important; left: 0 !important; transform: none !important; box-shadow: none !important; border-radius: 0 !important; }
+
+
         /* --- Decorative Images Styles (Contained within #iframe-container) --- */
         .decor-image {
             position: absolute;
@@ -75,20 +84,8 @@
             pointer-events: none; 
             z-index: 5; /* Z-index set lower than the iframe */
         }
-
-        #decor-image-1 {
-            /* EXTREMELY LARGE SIZE - based on viewport height */
-            width: 100vh; 
-            top: -250px; 
-            left: -300px; /* Offset to keep it relatively close to the modal */
-        }
-
-        #decor-image-2 {
-            /* EXTREMELY LARGE SIZE - based on viewport height */
-            width: 80vh; 
-            bottom: -125px; 
-            right: -250px; /* Offset to keep it relatively close to the modal */
-        }
+       #decor-image-1 { width: 100vh; top: -145px; left: -190px; }
+       #decor-image-2 { width: 80vh; bottom: -130px; right: -170px; }
 
         /* --- Backdrop Overlay --- */
         #backdrop-overlay {
@@ -104,19 +101,39 @@
             z-index: 15;
         }
 
-
         /* --- Iframe Element Styles --- */
         #content-frame {
             width: 100%;
             height: 100%;
             border: none; 
-            allow: "fullscreen";
-            background-color: white; /* Ensure it has a white background */
+            allow: "fullscreen"; /* Required for JS fullscreen API */
+            background-color: white; 
             position: relative;
             z-index: 10; /* Z-index set higher than the images */
-            border-radius: 8px; /* Match modal container radius */
+            border-radius: 8px; 
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
         }
+
+        /* --- OVERLAID BUTTONS CONTAINER --- */
+        #iframe-controls {
+            position: absolute; /* Positioned relative to the #iframe-container */
+            top: 10px;          /* 10px from the top edge of the iframe window */
+            right: 10px;        /* 10px from the right edge */
+            display: flex;
+            gap: 5px;
+            z-index: 15; /* Above images, below main toggle button */
+        }
+        .iframe-control-btn {
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .iframe-control-btn:hover { background-color: rgba(0, 0, 0, 0.8); }
+
     </style>
 </head>
 <body>
@@ -128,45 +145,70 @@
     </button>
 
     <div id="iframe-container">
-        <!-- The iframe is within the container -->
+        
+        <!-- --- OVERLAID BUTTONS ADDED HERE --- -->
+        <div id="iframe-controls">
+            <button class="iframe-control-btn" onclick="reloadIframe()">Reload</button>
+            <button class="iframe-control-btn" onclick="toggleFullscreen()">Fullscreen</button>
+        </div>
+        
         <iframe id="content-frame" src="YOUR_URL_HERE" title="External Content Frame"></iframe>
         
-        <!-- The images are also within the container but behind the iframe -->
         <img src="./asset/iframeimage1.png" alt="Floating decor 1" class="decor-image" id="decor-image-1">
         <img src="./asset/iframeimage2.png" alt="Floating decor 2" class="decor-image" id="decor-image-2">
     </div>
 
     <script>
-        // --- Modal Toggle Script ---
-        function toggleIframe() {
-            const container = document.getElementById('iframe-container');
-            const button = document.getElementById('toggle-button');
-            const backdrop = document.getElementById('backdrop-overlay');
-            
-            container.classList.toggle('is-visible');
-            backdrop.classList.toggle('is-visible');
+        // Get references to elements
+        const iframeEl = document.getElementById('content-frame');
+        const iframeContainerEl = document.getElementById('iframe-container');
+        const toggleButtonEl = document.getElementById('toggle-button');
+        const backdropEl = document.getElementById('backdrop-overlay');
+        const decorImages = document.querySelectorAll('.decor-image');
 
-            const isVisible = container.classList.contains('is-visible');
-            
-            if (isVisible) {
-                button.textContent = 'Hide Iframe Modal';
-                button.setAttribute('aria-expanded', 'true');
+        // --- Action Functions ---
+        function toggleIframe() {
+            iframeContainerEl.classList.toggle('is-visible');
+            backdropEl.classList.toggle('is-visible');
+            const isVisible = iframeContainerEl.classList.contains('is-visible');
+            toggleButtonEl.textContent = isVisible ? 'Hide Iframe Modal' : 'Show Iframe Modal';
+            toggleButtonEl.setAttribute('aria-expanded', isVisible);
+        }
+
+        function reloadIframe() {
+            iframeEl.src = iframeEl.src; // Reloads the source document within the iframe
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                // Request fullscreen for the container element
+                if (iframeContainerEl.requestFullscreen) {
+                    iframeContainerEl.requestFullscreen();
+                } else if (iframeContainerEl.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                    iframeContainerEl.webkitRequestFullscreen();
+                }
             } else {
-                button.textContent = 'Show Iframe Modal';
-                button.setAttribute('aria-expanded', 'false');
+                // Exit fullscreen if already in it
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                    document.webkitExitFullscreen();
+                }
             }
         }
 
         // --- Parallax Effect Script for Decor Images ---
-        const decorImages = document.querySelectorAll('.decor-image');
-        const parallaxStrength = 60; // Increased strength for dramatic movement
+        const parallaxStrength = 60; 
 
         document.addEventListener('mousemove', (e) => {
-            decorImages.forEach(image => {
-                const offsetX = (e.clientX / window.innerWidth - 0.5) * parallaxStrength;
-                const offsetY = (e.clientY / window.innerHeight - 0.5) * parallaxStrength;
-                image.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-            });
+            // Only run parallax if the iframe modal is visible and not in native fullscreen mode
+            if (iframeContainerEl.classList.contains('is-visible') && !document.fullscreenElement) {
+                 decorImages.forEach(image => {
+                    const offsetX = (e.clientX / window.innerWidth - 0.5) * parallaxStrength;
+                    const offsetY = (e.clientY / window.innerHeight - 0.5) * parallaxStrength;
+                    image.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                });
+            }
         });
     </script>
 </body>
