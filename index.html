@@ -101,6 +101,35 @@
             padding: 5px 10px; background-color: rgba(0, 0, 0, 0.6); color: white;
             font-size: 12px;
         }
+
+        /* --- Sliding Image Block Styles --- */
+#sliding-block {
+    position: fixed;
+    top: 50%;
+    /* Starts hidden off-screen to the right by its full width (100%) */
+    right: 0; 
+    transform: translateY(-50%) translateX(100%); 
+    width: 200px; /* Width of the image container */
+    cursor: pointer;
+    z-index: 100; /* Ensure it's visible */
+    transition: transform 0.5s ease-out; /* Smooth sliding animation */
+    border-radius: 5px 0 0 5px; /* Rounded corners only on the left side */
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Class added by JS to slide it in */
+#sliding-block.is-active {
+    /* Slides left to be flush with the right edge of the screen */
+    transform: translateY(-50%) translateX(0); 
+}
+
+#sliding-block img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
     </style>
 </head>
 <body>
@@ -122,6 +151,16 @@
         
         <img src="./asset/iframeimage1.png" alt="Floating decor 1" class="decor-image" id="decor-image-1">
         <img src="./asset/iframeimage2.png" alt="Floating decor 2" class="decor-image" id="decor-image-2">
+
+        <!-- --- New Sliding Block HTML --- -->
+<div id="sliding-block" onclick="toggleSlidingBlock()">
+    <!-- Link wraps the image -->
+    <a href="https://example.com" target="_blank" onclick="event.stopPropagation()">
+        <!-- Replace 'path/to/your/sliding_image.jpg' with your image path -->
+        <img src="./asset/your_sliding_image.jpg" alt="Clickable content link">
+    </a>
+</div>
+
     </div>
 
     <script>
@@ -169,6 +208,16 @@
                 });
             }
         });
+
+        // Add this line with your other element selectors (at the top of the <script> block)
+const slidingBlockEl = document.getElementById('sliding-block');
+
+// --- Sliding Block Function ---
+function toggleSlidingBlock() {
+    // Toggles the 'is-active' class on click
+    slidingBlockEl.classList.toggle('is-active');
+}
+
     </script>
 </body>
 </html>
