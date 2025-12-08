@@ -106,14 +106,17 @@
         }
 
 #blooket-cheats {
-    position: relative; /* Make position relative to allow absolute positioning of children */
-    display: inline-block; /* Ensure it only takes the size of the image */
-}
+        position: relative; /* Position relative for children to position absolute */
+        display: inline-block; /* Ensures it only takes the size of the image */
+    }
 
 /* The Image CSS (This is what we will animate and click) */
-#moving-image {
-    cursor: pointer; /* Pointer cursor for image */
-}
+ #moving-image {
+        cursor: pointer; /* Pointer cursor for image */
+        display: block; /* Ensure it occupies space */
+        max-width: 100%; /* Responsive sizing */
+        height: auto; /* Maintain aspect ratio */
+    }
 
 /* The CSS class for the destination */
 #moving-image.moved-right {
@@ -121,18 +124,17 @@
 }
 
 .overlay-button {
-    position: absolute; /* Position button over the image */
-    bottom: 10px; /* Adjust as needed */
-    right: 10px; /* Adjust as needed */
-    background-color: rgba(76, 175, 80, 0.8); /* Change to your preferred color */
-    color: white; /* Button text color */
-    border: none; /* Remove border */
-    padding: 10px 15px; /* Adjust size */
-    border-radius: 5px; /* Round corners */
-    z-index: 20; /* Keep above the image */
-    cursor: pointer; /* Change to pointer cursor to show it’s clickable */
-    pointer-events: auto; /* Enable button to be clicked */
-}
+        position: absolute; /* Button positioned over the image */
+        bottom: 10px; /* Adjust as needed for your layout */
+        right: 10px; /* Adjust as needed for your layout */
+        background-color: rgba(76, 175, 80, 0.8); /* Preferred color */
+        color: white; /* Button text color */
+        border: none; /* Remove border */
+        padding: 10px 15px; /* Size of the button */
+        border-radius: 5px; /* Round corners */
+        z-index: 20; /* Ensure it's above the image */
+        cursor: pointer; /* Show pointer cursor */
+    }
 
 
 
@@ -143,7 +145,7 @@
     <div id="backdrop-overlay"></div>
 
  <div id="blooket-cheats">
-    <img id="moving-image" src="./asset/blooketcheats1.png" alt="Description of the image content" onclick="moveImage()">
+    <img id="moving-image" src="./asset/blooketcheats1.png" alt="Blooket Cheats Image" onclick="moveImage()">
     <button class="overlay-button" onclick="futureFunction()">Click Me</button>
 </div>
 
@@ -212,19 +214,20 @@
             }
         });
 
-     // --- New Image Movement Functions ---
-    // Get the specific image element we want to move
-    const movingImage = document.getElementById('moving-image');
+   // Get the specific image element we want to move
+const movingImage = document.getElementById('moving-image');
 
-    // This function runs every time the image is clicked
-    function moveImage() {
-        // Toggle the 'moved-right' class on the *image* only
-        movingImage.classList.toggle('moved-right');
-    }
-        function futureFunction() {
-    // Placeholder for future functionality
+// This function runs every time the image is clicked
+function moveImage() {
+    // Toggle the 'moved-right' class on the image only
+    movingImage.classList.toggle('moved-right');
+}
+
+// Placeholder function for future button functionality
+function futureFunction() {
     console.log("Future functionality to be implemented!");
 }
+
 
     </script>
 </body>
