@@ -148,20 +148,10 @@
     /* Removed cursor: pointer here because clicks don't register on the button anymore */
 }
 
-         #ai-button {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #6200ea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            text-decoration: none;
-            font-size: 18px;
-             z-index: 100;
-        }
+         position: fixed; /* Positions it relative to the viewport */
+            bottom: 20px;   /* Place it near the bottom of the screen */
+            left: 20px;     /* Place it near the left of the screen */
+            z-index: 1000;
 
         #ai-button:hover {
             background-color: #3700b3;
