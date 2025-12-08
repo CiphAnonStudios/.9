@@ -128,25 +128,19 @@
     transform: translateX(510px); 
 }
 
-/* Button styles remain the same */
 .overlay-button {
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-    
-    /* !!! KEY FIX !!! Clicks pass through the button to the image below */
-    pointer-events: none; 
-
-    z-index: 10; /* Ensures the button is always on top visually */
-
-    /* Appearance styles */
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    /* Removed cursor: pointer here because clicks don't register on the button anymore */
+    position: absolute; /* Position the button over the image */
+    top: 0; /* Adjust as necessary */
+    left: 0; /* Adjust as necessary */
+    width: 100%; /* Ensure it covers the image */
+    height: 100%; /* Ensure it covers the image */
+    background-color: transparent; /* Make background transparent */
+    border: none; /* No border */
+    z-index: 10; /* Keep above the image */
+    cursor: default; /* Change to default cursor */
+    pointer-events: none; /* Disable clicking */
 }
+
 
 
     </style>
@@ -156,11 +150,9 @@
     <div id="backdrop-overlay"></div>
 
  <div id="blooket-cheats">
-    <!-- Changed the onclick to the correct function name -->
     <img id="moving-image" src="./asset/blooketcheats1.png" alt="Description of the image content" onclick="moveImage()">
-    <button class="overlay-button">Click Me</button>
+    <button class="overlay-button" onclick="futureFunction()">Click Me</button>
 </div>
-
 
     <button id="toggle-button" class="action-button" onclick="toggleIframe()" aria-expanded="false" aria-controls="iframe-container">
         Show Iframe Modal
@@ -236,6 +228,11 @@
         // Toggle the 'moved-right' class on the *image* only
         movingImage.classList.toggle('moved-right');
     }
+        function futureFunction() {
+    // Placeholder for future functionality
+    console.log("Future functionality to be implemented!");
+}
+
     </script>
 </body>
 </html>
