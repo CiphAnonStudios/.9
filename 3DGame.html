@@ -303,7 +303,7 @@
       frame.add(picture);
 
       const textureLoader = new THREE.TextureLoader();
-      textureLoader.load("./asset/CiphAnonPosteer.png", (texture) => {
+      textureLoader.load("CiphAnonPosteer.png", (texture) => {
         picture.material.map = texture;
         picture.material.needsUpdate = true;
       });
