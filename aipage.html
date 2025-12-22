@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ciphanon AI Hub</title>
+    <title>Ciphanon AI Hub | 2025 Edition</title>
     <link rel="stylesheet" href="cdnjs.cloudflare.com">
     <link href="fonts.googleapis.com" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
             overflow: hidden;
         }
 
-        /* Sidebar Styling */
+        /* Sidebar */
         .sidebar {
             width: 340px;
             background-color: var(--sidebar);
@@ -37,39 +37,19 @@
             z-index: 10;
         }
 
-        .sidebar-header {
-            padding: 30px 25px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .logo-area h1 {
-            font-size: 1.4rem;
-            margin: 0;
-            letter-spacing: 2px;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid var(--border); }
+        .logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .logo-area h1 { font-size: 1.3rem; margin: 0; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; }
 
         .disclaimer-box {
             background: var(--accent-soft);
             border: 1px solid var(--accent);
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             font-size: 11px;
-            line-height: 1.4;
             color: #ffb380;
         }
 
-        .disclaimer-box a { color: white; font-weight: bold; text-decoration: underline; }
-
-        /* Scroll Area */
         .sidebar-scroll {
             flex: 1;
             overflow-y: auto;
@@ -83,68 +63,76 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--text-dim);
-            margin: 30px 0 15px;
+            margin: 25px 0 12px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .category-header::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        /* AI Buttons */
+        /* AI Items */
         .ai-item {
             width: 100%;
             background: #16161a;
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
         }
+        .ai-item:hover { transform: translateX(5px); border-color: var(--accent); background: var(--accent-soft); }
+        .ai-name { font-size: 13.5px; font-weight: 600; color: white; }
+        .score-pill { background: var(--accent); color: black; font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 5px; }
 
-        .ai-item:hover {
-            transform: translateX(5px);
-            border-color: var(--accent);
-            background: var(--accent-soft);
-        }
+        /* Main Content Area */
+        .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
 
-        .ai-info { display: flex; flex-direction: column; text-align: left; }
-        .ai-name { font-size: 14px; font-weight: 600; color: white; }
-        .ai-url { font-size: 11px; color: var(--text-dim); }
-
-        .score-pill {
-            background: var(--accent);
-            color: black;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 4px 8px;
-            border-radius: 6px;
-            min-width: 25px;
-            text-align: center;
-        }
-
-        /* Content Area */
-        .main-content { flex: 1; display: flex; flex-direction: column; }
-
-        .context-header {
+        .nav-bar {
             background: #000;
             border-bottom: 1px solid var(--border);
-            padding: 15px 30px;
+            padding: 8px 15px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            height: 40px;
+            gap: 15px;
+            z-index: 50;
         }
 
-        .context-label { color: var(--accent); font-weight: bold; font-size: 13px; text-transform: uppercase; }
-        .context-desc { color: var(--text-dim); font-size: 13px; }
+        .back-btn {
+            background: var(--accent);
+            color: black;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-weight: 800;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-        .iframe-container { flex: 1; background: #fff; }
+        .status-text { color: var(--text-dim); font-size: 12px; font-weight: 600; }
+
+        .iframe-container { flex: 1; position: relative; background: #fff; }
         iframe { width: 100%; height: 100%; border: none; }
+
+        /* Studio Floating Image */
+        .studio-logo-overlay {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            width: 100px;
+            height: auto;
+            z-index: 100;
+            pointer-events: none; /* Let clicks go through to iframe */
+            filter: drop-shadow(0 0 10px rgba(255, 107, 0, 0.5));
+            transition: opacity 0.3s;
+        }
+        .studio-logo-overlay img { width: 100%; }
 
         .sidebar-scroll::-webkit-scrollbar { width: 4px; }
         .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--accent); }
@@ -155,118 +143,118 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="logo-area">
-                <i class="fas fa-atom" style="color: var(--accent); font-size: 1.5rem;"></i>
-                <h1>AI System</h1>
+                <i class="fas fa-ghost"></i>
+                <h1>AI NODE</h1>
             </div>
             <div class="disclaimer-box">
-                Use on <a href="https://ciphanon.com">Ciphanon Studios</a> or a proxy to bypass blocks.
+                <b>Ciphanon Studios Proxy</b> active. Use this node to bypass local site blocks.
             </div>
         </div>
 
         <div class="sidebar-scroll">
-            <span class="category-header">Primary Access</span>
-            <div class="ai-item" onclick="loadAI('./aiPage/duckai.html', 'DuckDuckGo AI', 'Privacy-focused AI interface', '95')">
-                <div class="ai-info"><span class="ai-name">DuckDuckGo AI</span><span class="ai-url">duckai.html</span></div>
-                <div class="score-pill">95</div>
+            <span class="category-header">Primary</span>
+            <div class="ai-item" onclick="loadAI('./aiPage/duckai.html', 'DuckDuckGo AI', '95')">
+                <span class="ai-name">DuckDuckGo AI</span><span class="score-pill">95</span>
             </div>
 
-            <span class="category-header">General & Research</span>
-            <div class="ai-item" onclick="loadAI('https://otter.ai', 'Otter AI', 'Neural transcription & meeting notes', '78')">
-                <div class="ai-info"><span class="ai-name">Otter.ai</span><span class="ai-url">otter.ai</span></div>
-                <div class="score-pill">78</div>
+            <span class="category-header">General Purpose</span>
+            <div class="ai-item" onclick="loadAI('https://otter.ai', 'Otter AI', '78')">
+                <span class="ai-name">Otter.ai</span><span class="score-pill">78</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://www.researchrabbitapp.com', 'Research Rabbit', 'Scientific literature mapping', '82')">
-                <div class="ai-info"><span class="ai-name">Research Rabbit</span><span class="ai-url">researchrabbitapp.com</span></div>
-                <div class="score-pill">82</div>
+            <div class="ai-item" onclick="loadAI('https://www.researchrabbitapp.com', 'Research Rabbit', '82')">
+                <span class="ai-name">Research Rabbit</span><span class="score-pill">82</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://www.hemingwayapp.com', 'Hemingway App', 'Writing clarity engine', '84')">
-                <div class="ai-info"><span class="ai-name">Hemingway</span><span class="ai-url">hemingwayapp.com</span></div>
-                <div class="score-pill">84</div>
+            <div class="ai-item" onclick="loadAI('https://www.hemingwayapp.com', 'Hemingway', '84')">
+                <span class="ai-name">Hemingway</span><span class="score-pill">84</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://pdf.ai', 'PDF.ai', 'Chat with document binaries', '76')">
-                <div class="ai-info"><span class="ai-name">PDF.ai</span><span class="ai-url">pdf.ai</span></div>
-                <div class="score-pill">76</div>
+            <div class="ai-item" onclick="loadAI('https://pdf.ai', 'PDF.ai', '76')">
+                <span class="ai-name">PDF.ai</span><span class="score-pill">76</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://elicit.org', 'Elicit', 'AI Research Assistant', '81')">
-                <div class="ai-info"><span class="ai-name">Elicit</span><span class="ai-url">elicit.org</span></div>
-                <div class="score-pill">81</div>
+            <div class="ai-item" onclick="loadAI('https://elicit.org', 'Elicit', '81')">
+                <span class="ai-name">Elicit</span><span class="score-pill">81</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://consensus.app', 'Consensus', 'Scientific research search', '83')">
-                <div class="ai-info"><span class="ai-name">Consensus</span><span class="ai-url">consensus.app</span></div>
-                <div class="score-pill">83</div>
+            <div class="ai-item" onclick="loadAI('https://consensus.app', 'Consensus', '83')">
+                <span class="ai-name">Consensus</span><span class="score-pill">83</span>
             </div>
 
             <span class="category-header">Math & Science</span>
-            <div class="ai-item" onclick="loadAI('https://mathsolver.microsoft.com/', 'Microsoft Math', 'Advanced equation solver', '92')">
-                <div class="ai-info"><span class="ai-name">MS Math Solver</span><span class="ai-url">microsoft.com</span></div>
-                <div class="score-pill">92</div>
+            <div class="ai-item" onclick="loadAI('mathsolver.microsoft.com', 'Microsoft Math', '92')">
+                <span class="ai-name">MS Math Solver</span><span class="score-pill">92</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://socratic.org', 'Socratic', 'Google learning assistant', '90')">
-                <div class="ai-info"><span class="ai-name">Socratic</span><span class="ai-url">socratic.org</span></div>
-                <div class="score-pill">90</div>
+            <div class="ai-item" onclick="loadAI('https://socratic.org', 'Socratic', '90')">
+                <span class="ai-name">Socratic</span><span class="score-pill">90</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://www.geogebra.org', 'GeoGebra', 'Dynamic geometry & graphing', '92')">
-                <div class="ai-info"><span class="ai-name">GeoGebra</span><span class="ai-url">geogebra.org</span></div>
-                <div class="score-pill">92</div>
+            <div class="ai-item" onclick="loadAI('https://www.geogebra.org', 'GeoGebra', '92')">
+                <span class="ai-name">GeoGebra</span><span class="score-pill">92</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://www.mathway.com', 'Mathway', 'Quick math solutions', '70')">
-                <div class="ai-info"><span class="ai-name">Mathway</span><span class="ai-url">mathway.com</span></div>
-                <div class="score-pill">70</div>
+            <div class="ai-item" onclick="loadAI('https://www.mathway.com', 'Mathway', '70')">
+                <span class="ai-name">Mathway</span><span class="score-pill">70</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://solvely.ai', 'Solvely', 'STEM problem solver', '70')">
-                <div class="ai-info"><span class="ai-name">Solvely</span><span class="ai-url">solvely.ai</span></div>
-                <div class="score-pill">70</div>
+            <div class="ai-item" onclick="loadAI('https://solvely.ai', 'Solvely', '70')">
+                <span class="ai-name">Solvely</span><span class="score-pill">70</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://www.wolframalpha.com', 'WolframAlpha', 'Computational intelligence', '85')">
-                <div class="ai-info"><span class="ai-name">WolframAlpha</span><span class="ai-url">wolframalpha.com</span></div>
-                <div class="score-pill">85</div>
+            <div class="ai-item" onclick="loadAI('https://www.wolframalpha.com', 'WolframAlpha', '85')">
+                <span class="ai-name">WolframAlpha</span><span class="score-pill">85</span>
             </div>
 
-            <span class="category-header">Learning & Productivity</span>
-            <div class="ai-item" onclick="loadAI('https://apps.ankiweb.net', 'Anki', 'Spaced repetition flashcards', '94')">
-                <div class="ai-info"><span class="ai-name">AnkiWeb</span><span class="ai-url">ankiweb.net</span></div>
-                <div class="score-pill">94</div>
+            <span class="category-header">Productivity</span>
+            <div class="ai-item" onclick="loadAI('https://apps.ankiweb.net', 'Anki', '94')">
+                <span class="ai-name">AnkiWeb</span><span class="score-pill">94</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://quizlet.com', 'Quizlet', 'Learning sets and cards', '85')">
-                <div class="ai-info"><span class="ai-name">Quizlet</span><span class="ai-url">quizlet.com</span></div>
-                <div class="score-pill">85</div>
+            <div class="ai-item" onclick="loadAI('https://quizlet.com', 'Quizlet', '85')">
+                <span class="ai-name">Quizlet</span><span class="score-pill">85</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://www.forestapp.cc', 'Forest', 'Focus & productivity timer', '88')">
-                <div class="ai-info"><span class="ai-name">Forest App</span><span class="ai-url">forestapp.cc</span></div>
-                <div class="score-pill">88</div>
+            <div class="ai-item" onclick="loadAI('https://www.forestapp.cc', 'Forest', '88')">
+                <span class="ai-name">Forest App</span><span class="score-pill">88</span>
             </div>
 
-            <span class="category-header">Writing & Creativity</span>
-            <div class="ai-item" onclick="loadAI('https://aitestkitchen.withgoogle.com', 'AI Kitchen (Exp)', 'Google AI Experiments', '86')">
-                <div class="ai-info"><span class="ai-name">Google AI Kitchen</span><span class="ai-url">withgoogle.com</span></div>
-                <div class="score-pill">86</div>
+            <span class="category-header">Creativity</span>
+            <div class="ai-item" onclick="loadAI('https://aitestkitchen.withgoogle.com', 'Google AI Kitchen', '86')">
+                <span class="ai-name">AI Test Kitchen</span><span class="score-pill">86</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://successtutoring.com.au', 'Success Tutoring', 'AI-led educational support', '88')">
-                <div class="ai-info"><span class="ai-name">Success Tutoring</span><span class="ai-url">successtutoring.com.au</span></div>
-                <div class="score-pill">88</div>
+            <div class="ai-item" onclick="loadAI('https://successtutoring.com.au', 'Success Tutoring', '88')">
+                <span class="ai-name">Success Tutoring</span><span class="score-pill">88</span>
             </div>
-            <div class="ai-item" onclick="loadAI('https://padlet.com', 'Padlet', 'Visual collaborative boards', '80')">
-                <div class="ai-info"><span class="ai-name">Padlet</span><span class="ai-url">padlet.com</span></div>
-                <div class="score-pill">80</div>
+            <div class="ai-item" onclick="loadAI('https://padlet.com', 'Padlet', '80')">
+                <span class="ai-name">Padlet</span><span class="score-pill">80</span>
             </div>
         </div>
     </div>
 
     <div class="main-content">
-        <div class="context-header">
-            <span class="context-label" id="ctxName">Status</span>
-            <span class="context-desc" id="ctxInfo">Initialize System Node to start.</span>
+        <div class="nav-bar">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-chevron-left"></i> BACK
+            </button>
+            <div class="status-text" id="status">Ready...</div>
         </div>
+
         <div class="iframe-container">
-            <iframe id="mainFrame" src="about:blank"></iframe>
+            <!-- Studio Image Overlay -->
+            <div class="studio-logo-overlay">
+                <img src="YOUR_IMAGE_URL_HERE" alt="Ciphanon Studios">
+            </div>
+            <iframe id="mainFrame" name="mainFrame" src="about:blank"></iframe>
         </div>
     </div>
 
     <script>
-        function loadAI(url, name, info, score) {
-            document.getElementById('mainFrame').src = url;
-            document.getElementById('ctxName').innerText = name;
-            document.getElementById('ctxInfo').innerText = `[Rating: ${score}/100] — ${info}`;
+        const frame = document.getElementById('mainFrame');
+        const status = document.getElementById('status');
+
+        function loadAI(url, name, score) {
+            frame.src = url;
+            status.innerHTML = `<span style="color:var(--accent)">ACTIVE:</span> ${name} (${score}/100)`;
+        }
+
+        function goBack() {
+            try {
+                // Tries to go back inside the iframe history
+                frame.contentWindow.history.back();
+            } catch (e) {
+                // Standard browser history fallback
+                window.history.back();
+            }
         }
     </script>
 </body>
