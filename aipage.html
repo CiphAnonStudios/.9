@@ -3,124 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Iframe Page</title>
+    <title>AI Hub | CAS Cloak 2025</title>
+    <link rel="stylesheet" href="cdnjs.cloudflare.com">
     <style>
-        /* CSS styles define the layout and appearance */
+        :root {
+            --bg: #0f172a;
+            --sidebar-bg: #1e293b;
+            --accent: #6366f1;
+            --text: #f8fafc;
+            --card: #1e293b;
+            --border: #334155;
+            --context-bg: #4f46e5; /* The color of the top context bar */
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
-            flex-direction: column;
             height: 100vh;
             margin: 0;
-        }
-        .container {
-            display: flex;
-            flex: 1;
             overflow: hidden;
         }
+
+        /* Sidebar Styling */
         .sidebar {
-            width: 200px;
-            padding: 10px;
-            background-color: #f0f0f0;
-            overflow-y: auto;
-        }
-        .content-area {
-            flex: 1;
-            padding: 10px;
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            padding: 20px;
+            transition: all 0.3s ease;
         }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-button {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .ai-button:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content Area */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #000; /* Dark background for iframe area */
+        }
+
+        /* NEW: The Context Bar at the top of the page */
+        .context-bar {
+            background: var(--context-bg);
+            color: white;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        .context-bar i {
+            font-size: 16px;
+        }
+
+        /* Iframe Styling */
         .iframe-container {
             flex: 1;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #fff;
             position: relative;
         }
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
+            background: white;
         }
-        .description-box {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #e9e9e9;
-            border: 1px solid #ccc;
-            min-height: 50px;
-        }
+
         .controls {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 10px;
+            right: 10px;
+            z-index: 101;
         }
-        .controls button {
-            margin-left: 5px;
-        }
-        /* CSS classes for minimize state */
-        .minimized iframe, .minimized .description-box {
-            display: none;
-        }
-        .minimized .iframe-container {
-            height: auto;
-            flex: unset;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 5px;
+
+        .ctrl-btn {
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            border: 1px solid var(--border);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        .ctrl-btn:hover { background: var(--accent); }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="sidebar">
-            <!-- Buttons linked to the JavaScript functions -->
-            <button onclick="loadContent('./aiPage/duckai.html', 'Duck.ai. hello this is a test')">ai</button>
-            <button onclick="loadContent('page2.html', 'This is the description for page 2.')">Page 2</button>
-            <button onclick="loadContent('page3.html', 'This is the description for page 3.')">Page 3</button>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2><i class="fas fa-robot"></i> AI Directory</h2>
+        
+        <!-- Button 1: Updated with your local path -->
+        <button class="ai-button" onclick="loadAI('./aiPage/duckai.html', 'DuckDuckGo AI', 'Privacy-focused AI interface. Access GPT-4o and Claude 3 Opus without tracking.')">
+            <i class="fas fa-user-secret"></i> DuckDuckGo AI
+        </button>
+
+        <button class="ai-button" onclick="loadAI('https://chatgpt.com', 'ChatGPT', 'Advanced conversational AI by OpenAI for coding, writing, and analysis.')">
+            <i class="fas fa-bolt"></i> ChatGPT
+        </button>
+
+        <button class="ai-button" onclick="loadAI('https://claude.ai', 'Claude AI', 'Anthropic\'s AI known for high-quality reasoning and safe, helpful responses.')">
+            <i class="fas fa-feather-alt"></i> Claude AI
+        </button>
+    </div>
+
+    <!-- Main View Area -->
+    <div class="content-area">
+        
+        <!-- The Context Bar -->
+        <div class="context-bar" id="contextBar">
+            <i class="fas fa-info-circle"></i>
+            <span id="contextText">Please select an AI model from the sidebar to view context and start chatting.</span>
         </div>
 
-        <div class="content-area">
-            <div class="iframe-container" id="iframeContainer">
-                <div class="controls">
-                    <button onclick="toggleMinimize()">Minimize</button>
-                    <button onclick="toggleMaximize()">Maximize</button>
-                </div>
-                <iframe id="contentIframe" src="page1.html"></iframe>
-                <div class="description-box" id="descriptionBox">
-                    This is the description for page 1.
-                </div>
+        <div class="iframe-container" id="iframeContainer">
+            <div class="controls">
+                <button class="ctrl-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    <i class="fas fa-columns"></i>
+                </button>
             </div>
+            <iframe id="mainFrame" src="about:blank"></iframe>
         </div>
     </div>
 
-    <!-- The ONE script block for all dynamic functionality -->
     <script>
-        const contentIframe = document.getElementById('contentIframe');
-        const descriptionBox = document.getElementById('descriptionBox');
-        const iframeContainer = document.getElementById('iframeContainer');
-        const sidebar = document.querySelector('.sidebar');
+        const frame = document.getElementById('mainFrame');
+        const contextText = document.getElementById('contextText');
+        const sidebar = document.getElementById('sidebar');
 
-        // Function updates the iframe source and description text
-        function loadContent(url, description) {
-            contentIframe.src = url;
-            descriptionBox.textContent = description;
+        /**
+         * Logic to switch the iframe and the top context bar info
+         */
+        function loadAI(url, title, info) {
+            // Update Iframe
+            frame.src = url;
+            
+            // Update Context Bar
+            contextText.innerHTML = `<strong>${title}:</strong> ${info}`;
         }
 
-        // Function toggles the 'minimized' CSS class
-        function toggleMinimize() {
-            iframeContainer.classList.toggle('minimized');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
         }
 
-        // Function hides/shows the sidebar for a maximize effect
-        function toggleMaximize() {
-            sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
-        }
+        // Optional: Auto-load the first AI tool on page load
+        window.onload = () => {
+            // Uncomment the line below if you want DuckAI to load automatically:
+            // loadAI('./aiPage/duckai.html', 'DuckDuckGo AI', 'Privacy-focused AI interface.');
+        };
     </script>
 
 </body>
