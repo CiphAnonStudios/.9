@@ -1,0 +1,305 @@
+<html lang="en"><!--Head--><head>
+    <script type="text/javascript" src="https://wary-fan.surge.sh/uv/service/hvtrs8%2F-cmdgscnfbmx%2Cim%2Fru%60lkc-sqe%2Fhmois-sqe%2Fhmois%2Ce35ccg8acccg519%3Aa523fdea83f323dg.hs" __uv-attr-src="https://codesandbox.io/public/sse-hooks/sse-hooks.e15ace8ccace5398a721ffec81f121de.js"></script>
+    <script type="text/javascript" src="https://wary-fan.surge.sh/uv/service/hvtrs8%2F-cmdgscnfbmx%2Cim%2Fqtctkc-jq%2F%60alngr%2Cd%3Bc%6012a18%2Cjq" __uv-attr-src="https://codesandbox.io/static/js/banner.d9cb10a38.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Room with Interior</title>
+    <style>body{margin:0;overflow:hidden}canvas{display:block}#prompt{position:fixed;bottom:20%;left:50%;transform:translateX(-50%);font-size:24px;background:rgba(255,255,255,0.386);color:white;padding:10px;border-radius:5px;display:none}#crosshair{position:fixed;top:50%;left:50%;width:8px;height:8px;background:rgba(255,255,255,0.529);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}</style>
+  </head>
+  <!--Body-->
+  <body data-new-gr-c-s-check-loaded="14.1267.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1267.0">
+    <!--Crosshair Div(this script is the div for the Crosshair)-->
+    <div id="crosshair"></div>
+    <!--Prompt Div+E(this script is the div for the Prompt+E button)-->
+    <div id="prompt" style="display: none;">&nbsp;E&nbsp;</div>
+    <!--This is the script part that lets things be 3D-->
+    <script src="https://wary-fan.surge.sh/uv/service/hvtrs8%2F-cfnhs%2Ccnowddlcrg.aoo%2Fcjcx-lkbq%2Fvhpeg.hs-r32%3A%2Fvhpeg.oil.hs" __uv-attr-src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!--Script-->
+    <script>
+      // Scene, Camera, Renderer //
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        100
+      );
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // this part edits the lighting of the room //
+      const light = new THREE.PointLight(0xffffff, 1, 75);
+      light.position.set(0, 5, 0);
+      scene.add(light);
+
+      const ambientLight = new THREE.AmbientLight(0x404040);
+      scene.add(ambientLight);
+
+      // this part is how the room looks for the main thing like floor,ceiling, and walls //
+      const roomSize = 15;
+      const materials = {
+        floor: new THREE.MeshBasicMaterial({ color: 0x8b4513 }),
+        ceiling: new THREE.MeshBasicMaterial({ color: 0xf5deb3 }),
+        walls: new THREE.MeshBasicMaterial({ color: 0x708090 }),
+      };
+
+      const room = new THREE.Mesh(
+        new THREE.BoxGeometry(roomSize, roomSize, roomSize),
+        [
+          materials.walls, // Left wall //
+          materials.walls, // Right wall //
+          materials.ceiling, // Ceiling //
+          materials.floor, // Floor //
+          materials.walls, // Front wall //
+          materials.walls, // Back wall //
+          materials.pictureframe, // on the left wall //
+          materials.bookshelfback1, // on the right wall //
+          materials.bookshelfback2, // on the right wall //
+        ]
+      );
+      room.geometry.scale(1, 1, -1); // Flip normals
+      scene.add(room);
+
+      // this is the script for the door connected with the (Prompt+E button)
+      const doorWidth = 1.5;
+      const doorHeight = 3;
+      const doorMaterial = new THREE.MeshBasicMaterial({ color: 0x8b4529 });
+
+      const leftDoor = new THREE.Mesh(
+        new THREE.BoxGeometry(doorWidth, doorHeight, 0.1),
+        doorMaterial
+      );
+      const rightDoor = new THREE.Mesh(
+        new THREE.BoxGeometry(doorWidth, doorHeight, 0.1),
+        doorMaterial
+      );
+
+      leftDoor.position.set(-0.75, -roomSize / 2 + 1.5, -roomSize / 2 + 0.05);
+      rightDoor.position.set(0.75, -roomSize / 2 + 1.5, -roomSize / 2 + 0.05);
+
+      scene.add(leftDoor);
+      scene.add(rightDoor);
+
+      let doorState = { open: false, position: 0, lastToggle: 0 };
+
+      // Furniture: Table
+      const tableMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4529 });
+      const tableTop = new THREE.Mesh(
+        new THREE.BoxGeometry(4, 0.2, 2),
+        tableMaterial
+      );
+      tableTop.position.set(0, -roomSize / 2 + 1, 0);
+      scene.add(tableTop);
+
+      const tableLegGeometry = new THREE.BoxGeometry(0.2, 1, 0.2);
+      for (let x of [-1.8, 1.8]) {
+        for (let z of [-0.8, 0.8]) {
+          const leg = new THREE.Mesh(tableLegGeometry, tableMaterial);
+          leg.position.set(x, -roomSize / 2 + 0.5, z);
+          scene.add(leg);
+        }
+      }
+
+      // Furniture: Chair
+      const chairMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4529 });
+      const chairSeat = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 0.1, 1),
+        chairMaterial
+      );
+      chairSeat.position.set(-3, -roomSize / 2 + 0.75, -1);
+      scene.add(chairSeat);
+
+      const chairLegGeometry = new THREE.BoxGeometry(0.1, 0.75, 0.1);
+      for (let x of [-0.4, 0.4]) {
+        for (let z of [-0.4, 0.4]) {
+          const leg = new THREE.Mesh(chairLegGeometry, chairMaterial);
+          leg.position.set(-3 + x, -roomSize / 2 + 0.375, -1 + z);
+          scene.add(leg);
+        }
+      }
+
+      const chairBack = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 0.1),
+        chairMaterial
+      );
+      chairBack.position.set(-3, -roomSize / 2 + 1.25, -1.45);
+      scene.add(chairBack);
+
+      -(-(-(-(-(
+        // Camera Position
+        camera.position.set(0, -roomSize / 2 + 1.8, 4)
+      )))));
+
+      // Prompt Element
+      const prompt = document.getElementById("prompt");
+
+      // Pointer Lock
+      let isLocked = false;
+      document.body.addEventListener("click", () => {
+        renderer.domElement.requestPointerLock();
+      });
+
+      document.addEventListener("pointerlockchange", () => {
+        isLocked = document.pointerLockElement === renderer.domElement;
+      });
+
+      // Movement and Horizontal Rotation
+      let yaw = 0;
+      const speed = 0.1;
+      const sensitivity = 0.002;
+      const keys = {
+        w: false,
+        s: false,
+        a: false,
+        d: false,
+        e: false,
+        space: false,
+      };
+
+      document.addEventListener("mousemove", (event) => {
+        if (!isLocked) return;
+        yaw -= event.movementX * sensitivity;
+        camera.rotation.set(0, yaw, 0);
+      });
+
+      document.addEventListener(
+        "keydown",
+        (e) => (keys[__uv.$wrap((e.key.toLowerCase()))] = true)
+      );
+      document.addEventListener(
+        "keyup",
+        (e) => (keys[__uv.$wrap((e.key.toLowerCase()))] = false)
+      );
+
+      // Gravity
+      let velocity = new THREE.Vector3(); // x, y, z velocities
+      const groundLevel = -roomSize / 2 + 1.8; // Ground height
+      const jumpStrength = 0.2; // Jump speed
+
+      function move() {
+        const dir = new THREE.Vector3();
+        camera.getWorldDirection(dir);
+        dir.y = 0; // Lock vertical movement
+        dir.normalize();
+
+        const right = new THREE.Vector3();
+        right.crossVectors(camera.up, dir).normalize();
+
+        if (keys.w) camera.position.add(dir.multiplyScalar(speed));
+        if (keys.s) camera.position.add(dir.multiplyScalar(-speed));
+        if (keys.a) camera.position.add(right.multiplyScalar(speed)); // 'a' now moves right
+        if (keys.d) camera.position.add(right.multiplyScalar(-speed)); // 'd' now moves left
+
+        // Constrain to room
+        const limit = roomSize / 2 - 0.5;
+        camera.position.x = Math.max(
+          -limit,
+          Math.min(limit, camera.position.x)
+        );
+        camera.position.z = Math.max(
+          -limit,
+          Math.min(limit, camera.position.z)
+        );
+      }
+
+      // Door Interaction
+      function toggleDoors() {
+        const now = performance.now();
+        if (!keys.e || now - doorState.lastToggle < 500) return;
+
+        const distance = camera.position.distanceTo(leftDoor.position);
+        if (distance < 2.5) {
+          doorState.open = !doorState.open;
+          doorState.lastToggle = now;
+        }
+      }
+
+      function animateDoors() {
+        const targetPosition = doorState.open ? 1.5 : 0;
+        doorState.position += (targetPosition - doorState.position) * 0.1;
+
+        leftDoor.position.x = -0.75 - doorState.position;
+        rightDoor.position.x = 0.75 + doorState.position;
+      }
+
+      function checkDoorProximity() {
+        const distance = camera.position.distanceTo(leftDoor.position);
+        prompt.style.display = distance < 2.5 ? "block" : "none";
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        move();
+        toggleDoors();
+        checkDoorProximity();
+        animateDoors();
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Picture Frame
+      const pictureFrameMaterial = new THREE.MeshBasicMaterial({
+        color: 0x8b4513,
+      }); // Black border for the frame
+      const pictureMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White placeholder for the picture
+
+      const frameWidth = 2;
+      const frameHeight = 2;
+      const frameDepth = 0.1;
+
+      // Outer frame (border)
+      const frame = new THREE.Mesh(
+        new THREE.BoxGeometry(frameWidth, frameHeight, frameDepth),
+        pictureFrameMaterial
+      );
+      frame.position.set(-roomSize / 2 + 0.05, -5, 0); // Position on the left wall
+      frame.rotation.y = Math.PI / 2; // Rotate to align with the left wall
+      scene.add(frame);
+
+      // Inner picture (actual picture area)
+      const picture = new THREE.Mesh(
+        new THREE.PlaneGeometry(frameWidth - 0.2, frameHeight - 0.2),
+        pictureMaterial
+      );
+      picture.position.set(0, 0, frameDepth / 2 + 0.01); // Slightly forward to avoid z-fighting
+      frame.add(picture);
+
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load("CiphAnon_Studios_Character.png", (texture) => {
+        picture.material.map = texture;
+        picture.material.needsUpdate = true;
+      });
+
+      // Create book shelf back
+      const geometry = new THREE.BoxGeometry(1.5, 4, 2.5); // Size of the block
+      const material = new THREE.MeshBasicMaterial({ color: 0x8b4529 });
+      const bookshelfback1 = new THREE.Mesh(geometry, material);
+      const bookshelfback2 = new THREE.Mesh(geometry, material);
+      const bookshelfback3 = new THREE.Mesh(geometry, material);
+
+      // Set the position of the block (x, y, z)
+      bookshelfback1.position.set(7.5, -6, 6.3); // Example: Moves the block to (x=2, y=3, z=0)
+      scene.add(bookshelfback1);
+      // Set the position of the block (x, y, z)
+      bookshelfback2.position.set(7.5, -6, 3.7); // Example: Moves the block to (x=2, y=3, z=0)
+      scene.add(bookshelfback2);
+      // Set the position of the block (x, y, z)
+      bookshelfback3.position.set(-7.5, -6, 2.5); // Example: Moves the block to (x=2, y=3, z=0)
+      scene.add(bookshelfback3);
+    </script><canvas width="1442" height="727" style="display: block; width: 1442px; height: 727px;"></canvas>
+    <script __uv-attr-crossorigin="" type="text/javascript" src="https://wary-fan.surge.sh/uv/service/hvtrs8%2F-cmdgscnfbmx%2Cim%2Fqtctkc-jq%2Fuavepmcri-%60uvtmn%2Cegb34c95b%2Cjq" __uv-attr-src="https://codesandbox.io/static/js/watermark-button.eeb14a97b.js"></script>
+  
+
+<iframe id="sb__open-sandbox16" __uv-attr-style="
+      position: fixed;
+      margin: 0;
+      padding: 0;
+      bottom: 16px;
+      right: 16px;
+      border: none;
+      width: 118px;
+      height: 36px;
+      z-index: 9999999999999;
+    " style="position:fixed;margin:0;padding:0;bottom:16px;right:16px;border:none;width:118px;height:36px;z-index:9999999999999"></iframe></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
