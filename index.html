@@ -188,6 +188,10 @@
             margin-right: 8px;
         }
 
+        .slide { display: none; width: 100%; }
+.slide.active { display: block; }
+.navigation-bar img { width: 50px; cursor: pointer; } /* Style image buttons */
+
     </style>
 </head>
 <body>
@@ -225,7 +229,16 @@
         </svg>
         AI
     </a>
-    
+
+    <div class="slider">
+        <img id="slide-1" src="large-img1.jpg" class="slide active">
+        <img id="slide-2" src="large-img2.jpg" class="slide">
+    </div>
+
+    <div class="navigation-bar">
+  <button onclick="showSlide(0)"><img src="thumb1.jpg" alt="Slide 1"></button>
+  <button onclick="showSlide(1)"><img src="thumb2.jpg" alt="Slide 2"></button>
+    </div>
     <script>
         const iframeEl = document.getElementById('content-frame');
         const iframeContainerEl = document.getElementById('iframe-container');
@@ -281,6 +294,13 @@
         // Toggle the 'moved-right' class on the *image* only
         movingImage.classList.toggle('moved-right');
     }
+
+        function showSlide(index) {
+  const slides = document.querySelectorAll('.slide');
+  slides.forEach(s => s.classList.remove('active')); // Hide all
+  slides[index].classList.add('active'); // Show selected
+}
+
 
     </script>
 </body>
