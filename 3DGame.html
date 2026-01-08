@@ -73,6 +73,13 @@
   }
 }
 
+      /* The active/pressed state */
+#prompt.pressed::before {
+  box-shadow: none;
+  transform: translateY(4px); /* Moves it down to fill the gap left by the shadow */
+}
+
+      
      #crosshair {
   position: fixed;
   top: 50%;
@@ -385,6 +392,20 @@
       // Set the position of the block (x, y, z)
       bookshelfback3.position.set(-7.5, -6, 2.5); // Example: Moves the block to (x=2, y=3, z=0)
       scene.add(bookshelfback3);
+
+
+      window.addEventListener('keydown', (event) => {
+  if (event.key.toLowerCase() === 'e') {
+    document.getElementById('prompt').classList.add('pressed');
+  }
+});
+
+window.addEventListener('keyup', (event) => {
+  if (event.key.toLowerCase() === 'e') {
+    document.getElementById('prompt').classList.remove('pressed');
+  }
+});
+
     </script>
   </body>
 </html>
